@@ -1,14 +1,21 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
+import './Photo.css';
 
 const Photo = ({ photo, index, baskets }) => {
-    const isImageInBasket = baskets.some((basket) =>
-  basket.images.some((img) => img.id === photo.id)
-);
+  const isImageInBasket = baskets.some((basket) =>
+    basket.images.some((img) => img.id === photo.id)
+  );
   return (
-    <Draggable key={photo.id} draggableId={photo.id} index={index}>
+    <Draggable
+      className="img-top"
+      key={photo.id}
+      draggableId={photo.id}
+      index={index}
+    >
       {(provided) => (
         <div
+          className="img-top"
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -19,6 +26,7 @@ const Photo = ({ photo, index, baskets }) => {
             style={{
               width: '100px',
               marginBottom: '8px',
+              display: 'flex',
               opacity: isImageInBasket ? 0.5 : 1,
             }}
           />

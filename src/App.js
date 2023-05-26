@@ -5,6 +5,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import SearchForm from './components/SearchForm/SearchForm';
 import Photo from './components/Photo/Photo';
 import Basket from './components/Basket/Basket';
+import './App.css';
 
 function App() {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -13,7 +14,7 @@ function App() {
   const [baskets, setBaskets] = useState([]);
   const [isSortingComplete, setIsSortingComplete] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  
+
   const handleSearch = async () => {
     if (isSearching || searchKeyword === '') return; // Prevent multiple searches or empty keyword searches
     setIsSearching(true);
@@ -54,7 +55,9 @@ function App() {
     const destinationBasketId = destination.droppableId;
 
     if (destinationBasketId.includes('basket')) {
-      const destinationBasket = baskets?.find((basket) => basket.id === destinationBasketId);
+      const destinationBasket = baskets?.find(
+        (basket) => basket.id === destinationBasketId
+      );
 
       if (destinationBasket.keyword === search) {
         setBaskets((prevState) => {
@@ -62,7 +65,10 @@ function App() {
             if (basket.id === destinationBasketId) {
               const existingImageIds = basket.images.map((image) => image.id);
 
-              if (basket.images.length < 5 && !existingImageIds.includes(draggedImage.id)) {
+              if (
+                basket.images.length < 5 &&
+                !existingImageIds.includes(draggedImage.id)
+              ) {
                 return {
                   ...basket,
                   images: [...basket.images, draggedImage],
@@ -88,12 +94,11 @@ function App() {
   };
 
   const handleBasketClick = (basketId) => {
-    console.log('Basket clicked:', basketId);
-    const clickedBasket = baskets?.find((basket) => basket.id === basketId);
-    console.log(clickedBasket.images);
     setBaskets((prevState) =>
       prevState.map((basket) =>
-        basket.id === basketId ? { ...basket, showImages: !basket.showImages } : basket
+        basket.id === basketId
+          ? { ...basket, showImages: !basket.showImages }
+          : basket
       )
     );
   };
@@ -107,42 +112,60 @@ function App() {
   }, [baskets]);
 
   return (
-    <div>
-      <SearchForm
-        searchKeyword={searchKeyword}
-        onSearch={setSearchKeyword}
-        isSearching={isSearching}
-        handleSearch = {handleSearch}
-      />
+    <div className="container">
+      <div className="cont-flex">
+        <SearchForm
+          searchKeyword={searchKeyword}
+          onSearch={setSearchKeyword}
+          isSearching={isSearching}
+          handleSearch={handleSearch}
+        />
 
-      {isSortingComplete ? (
-        <p>You are finished!</p>
-      ) : (
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <div style={{ display: 'flex' }}>
-            <Droppable droppableId="search-results">
-              {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps} style={{ flex: 1 }}>
-                  {searchResults.map((photo, index) => (
-                    <Photo key={photo.id} baskets = {baskets} photo={photo} index={index} />
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+        {isSortingComplete ? (
+          <p>You are finished!</p>
+        ) : (
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="only-div">
+              <Droppable droppableId="search-results">
+                {(provided) => (
+                  <div
+                    className="top-img"
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    style={{ flex: 1 }}
+                  >
+                    {searchResults.map((photo, index) => (
+                      <Photo
+                        key={photo.id}
+                        baskets={baskets}
+                        photo={photo}
+                        index={index}
+                      />
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
 
-            <div style={{ flex: 1 }}>
-              {baskets?.map((basket) => (
-                <Basket key={basket.id} basket={basket} onClick={handleBasketClick} />
-              ))}
+              <div className="ul-li">
+                {baskets?.map((basket) => (
+                  <div className="f-l">
+                    <span>{basket.keyword}</span>
+                    <Basket
+                      key={basket.id}
+                      basket={basket}
+                      onClick={handleBasketClick}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </DragDropContext>
-      )}
-      {isSortingComplete && <p>All images have been sorted!</p>}
+          </DragDropContext>
+        )}
+        {isSortingComplete && <p>All images have been sorted!</p>}
+      </div>
     </div>
   );
 }
 
 export default App;
-

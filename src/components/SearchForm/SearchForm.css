@@ -1,0 +1,29 @@
+.inp {
+  /* width: 80%;
+    height: 20px; */
+  width: 90%;
+  height: 20px;
+  border-radius: 20px;
+  padding: 5px;
+  border: none;
+  color: rgb(27, 116, 229);
+}
+.inp-div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 4px;
+}
+.inp-div button {
+  border: none;
+  background-color: aqua;
+  padding: 8px;
+  width: 7%;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.inp-div button:hover {
+  background-color: aquamarine;
+}
